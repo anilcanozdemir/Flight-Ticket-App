@@ -2,6 +2,8 @@ package com.example.DTOs.Seat.Request;
 
 import com.example.Entity.Flight;
 import com.example.Enums.SeatNumber;
+import com.example.Enums.SeatType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +12,16 @@ import lombok.Setter;
 public class SeatAddDto {
 
 
-    private Flight flight;
 
-    private SeatNumber seatNumber;
+    private Long id;
 
+
+    private Long flightId;
+    @Column
+    private String seatNumber;
+    @Column
+    private boolean fullled;
+
+    private SeatType seatType;
 
 }

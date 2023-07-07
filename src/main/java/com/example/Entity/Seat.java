@@ -1,6 +1,7 @@
 package com.example.Entity;
 
 import com.example.Enums.SeatNumber;
+import com.example.Enums.SeatType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,9 @@ public class Seat {
     private String seatNumber;
     @Column
     private boolean fullled;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private SeatType seatType;
 
 }

@@ -2,17 +2,16 @@ package com.example.Service.Concrete;
 
 
 import com.example.Constants.Constants;
-import com.example.DTOs.Flight.Response.FlightResponseDto;
 import com.example.DTOs.Seat.Request.SeatAddDto;
 import com.example.DTOs.Seat.Request.SeatUpdateDto;
 import com.example.DTOs.Seat.Response.SeatResponseDto;
 import com.example.Entity.Flight;
 import com.example.Entity.Seat;
 import com.example.Enums.SeatNumber;
+import com.example.Enums.SeatType;
 import com.example.Repository.SeatRepository;
 import com.example.Service.Contrats.FlightService;
 import com.example.Service.Contrats.SeatService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -29,26 +28,33 @@ public class SeatManager implements SeatService {
     private final ModelMapper modelMapper;
 
     private final FlightService flightService;
+
     public SeatManager(SeatRepository seatRepository,
                        ModelMapper modelMapper,
-                      @Lazy FlightService flightService  )
-    {
-        this.seatRepository=seatRepository;
-        this.modelMapper=modelMapper;
-        this.flightService=flightService;
+                       @Lazy FlightService flightService) {
+        this.seatRepository = seatRepository;
+        this.modelMapper = modelMapper;
+        this.flightService = flightService;
     }
+
     @Override
     public void add(Long id, int capacity) {
-        String[] seatNumbers=SeatNumber.generateSeatNumbers(capacity/Constants.SEATS_PER_ROW, Constants.SEATS_PER_ROW);
-        for(String seatNumber:seatNumbers)
-        {
-            Seat seat=new Seat();
-            seat.setSeatNumber(seatNumber);
+        String[] seatNumbers = SeatNumber.generateSeatNumbers(capacity / Constants.SEATS_PER_ROW, Constants.SEATS_PER_ROW);
+        for (int i = 0; i < capacity; i++) {
+            Seat seat = new Seat();
+            seat.setSeatNumber(seatNumbers[i]);
+            if (i < this.flightService.getById(id).getBusinessCapacity()) {
+                seat.setSeatType(SeatType.BUSINESS);
+            } else {
+                seat.setSeatType(SeatType.ECONOMY);
+            }
             seat.setFullled(false);
             seat.setFlight(modelMapper.map(this.flightService.getById(id), Flight.class));
+
             this.seatRepository.save(seat);
         }
     }
+
     @Override
     public void add(SeatAddDto seatAddDto) {
         this.seatRepository.save(modelMapper.map(seatAddDto, Seat.class));
@@ -58,9 +64,8 @@ public class SeatManager implements SeatService {
     @Override
     public SeatResponseDto deleteByid(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
-        if(seat.isPresent())
-        {
-            SeatResponseDto map=  modelMapper.map(seat.get(), SeatResponseDto.class);
+        if (seat.isPresent()) {
+            SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
             map.setFlightId(seat.get().getFlight().getId());
             this.seatRepository.delete(seat.get());
             return map;
@@ -84,9 +89,8 @@ public class SeatManager implements SeatService {
     @Override
     public SeatResponseDto getById(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
-        if(seat.isPresent())
-        {
-            SeatResponseDto map=  modelMapper.map(seat.get(), SeatResponseDto.class);
+        if (seat.isPresent()) {
+            SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
             map.setFlightId(seat.get().getFlight().getId());
             this.seatRepository.delete(seat.get());
             return map;
@@ -102,12 +106,12 @@ public class SeatManager implements SeatService {
 
     @Override
     public List<SeatResponseDto> getAllByFlightId(Long flightId) {
-        List<Seat> seatList= this.seatRepository.findAllByFlightId(flightId);
-        List<SeatResponseDto> seatResponseDtos=new ArrayList<>();
-        for (Seat seat:seatList
-             ) {
+        List<Seat> seatList = this.seatRepository.findAllByFlightId(flightId);
+        List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
+        for (Seat seat : seatList
+        ) {
 
-            SeatResponseDto seatResponseDto=this.modelMapper.map(seat,SeatResponseDto.class);
+            SeatResponseDto seatResponseDto = this.modelMapper.map(seat, SeatResponseDto.class);
             seatResponseDto.setFlightId(seat.getFlight().getId());
             seatResponseDtos.add(seatResponseDto);
 

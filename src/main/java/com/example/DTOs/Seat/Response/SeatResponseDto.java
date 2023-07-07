@@ -1,7 +1,7 @@
 package com.example.DTOs.Seat.Response;
 
-import com.example.Entity.Flight;
-import com.example.Enums.SeatNumber;
+
+import com.example.Enums.SeatType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class SeatResponseDto {
 
     private Long flightId;
 
-    private SeatNumber seatNumber;
-
-    private boolean empty;
+    private String seatNumber;
+    private boolean fullled;
+    private SeatType seatType;
 }

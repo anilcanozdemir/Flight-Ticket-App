@@ -28,5 +28,11 @@ public class Flight {
     @Column
     @Enumerated(EnumType.STRING)
     private FlyType flyType;
+    @Column
+    private double price;
+    @Column
+    private double businessExtra;
+    @Column
+    private int businessCapacity;
 
 }

@@ -2,6 +2,7 @@ package com.example.DTOs.Flight.Request;
 
 import com.example.Entity.Company;
 import com.example.Enums.FlyType;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,9 @@ public class FlightUpdateDto {
     private Long id;
 
     private FlyType flyType;
+    private double price;
+
+    private double businessExtra;
+
+    private int businessCapacity;
 }
