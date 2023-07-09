@@ -16,8 +16,9 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
+
     @PostMapping("/add")
-    public    void add(@RequestBody CompanyAddedDto companyAddedDto) {
+    public void add(@RequestBody CompanyAddedDto companyAddedDto) {
         this.companyService.add(companyAddedDto);
     }
 
@@ -28,7 +29,7 @@ public class CompanyController {
     }
 
     @GetMapping("/getById")
-    public  CompanyResponseDto getById(@RequestParam Long companyId) {
+    public CompanyResponseDto getById(@RequestParam Long companyId) {
         return this.companyService.getById(companyId);
 
     }
@@ -40,7 +41,7 @@ public class CompanyController {
     }
 
     @PostMapping("/deleteById")
-    public  CompanyResponseDto deleteById(@RequestParam Long companyId) {
+    public CompanyResponseDto deleteById(@RequestParam Long companyId) {
         return this.companyService.deleteByid(companyId);
     }
 

@@ -10,4 +10,13 @@ public interface SeatService extends BaseService<SeatResponseDto, SeatAddDto, Se
     List<SeatResponseDto> getAllByFlightId(Long flightId);
 
     void add(Long id, int capacity);
+
+    double getPriceById(Long id);
+    double getPriceByIdList(List<Long> idList);
+
+    double buyById(Long id);
+
+    double buyByIdList(List<Long> idList);
+
+    SeatResponseDto getByFlightIdAndSeatNumber(String seatNumber, Long flightId);
 }

@@ -13,7 +13,7 @@ public class FlightUpdateDto {
     private int capacity;
 
 
-    private Company company;
+    private Long companyId;
 
     private Long id;
 

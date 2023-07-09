@@ -56,6 +56,88 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    public double getPriceById(Long id) {
+        Optional<Seat> seat= this.seatRepository.findById(id);
+
+        if(seat.isPresent())
+        {
+            double price=seat.get().getFlight().getPrice();
+            if(seat.get().getSeatType() == SeatType.BUSINESS)
+                price+=seat.get().getFlight().getBusinessExtra();
+            return price;
+        }
+        return 0;
+    }
+
+    @Override
+    public double getPriceByIdList(List<Long> idList) {
+        double price=0;
+        if(idList.isEmpty())
+        {
+            return price;
+        }
+
+        for (Long id:
+             idList) {
+            Optional<Seat> seat= this.seatRepository.findById(id);
+
+            if(seat.isPresent())
+            {
+                price+=seat.get().getFlight().getPrice();
+                if(seat.get().getSeatType() == SeatType.BUSINESS)
+                    price+=seat.get().getFlight().getBusinessExtra();
+            }
+        }
+        return price;
+
+    }
+
+    @Override
+    public double buyById(Long id) {
+        Optional<Seat> seat= this.seatRepository.findById(id);
+
+        if(seat.isPresent())
+        {
+            double price=seat.get().getFlight().getPrice();
+            if(seat.get().getSeatType() == SeatType.BUSINESS)
+                price+=seat.get().getFlight().getBusinessExtra();
+            seat.get().setFullled(true);
+            this.seatRepository.save(seat.get());
+            return price;
+        }
+        return 0;
+    }
+
+    @Override
+    public double buyByIdList(List<Long> idList) {
+        double price=0;
+        if(idList.isEmpty())
+        {
+            return price;
+        }
+
+        for (Long id:
+                idList) {
+            Optional<Seat> seat= this.seatRepository.findById(id);
+
+            if(seat.isPresent())
+            {
+                price+=seat.get().getFlight().getPrice();
+                if(seat.get().getSeatType() == SeatType.BUSINESS)
+                    price+=seat.get().getFlight().getBusinessExtra();
+                seat.get().setFullled(true);
+                this.seatRepository.save(seat.get());
+            }
+        }
+        return price;
+    }
+
+    @Override
+    public SeatResponseDto getByFlightIdAndSeatNumber(String seatNumber, Long flightId) {
+       return modelMapper.map(this.seatRepository.findByFlightIdAndSeatNumber(flightId,seatNumber),SeatResponseDto.class);
+    }
+
+    @Override
     public void add(SeatAddDto seatAddDto) {
         this.seatRepository.save(modelMapper.map(seatAddDto, Seat.class));
 

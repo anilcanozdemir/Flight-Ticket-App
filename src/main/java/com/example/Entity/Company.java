@@ -12,11 +12,12 @@ import java.util.List;
 @Table(name = "company")
 public class Company {
     @Id
-    @Column(name = "companyId", nullable = false)
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(mappedBy = "company")
     private List<Flight> flightList;
+    @Column
     private String name;
 
 

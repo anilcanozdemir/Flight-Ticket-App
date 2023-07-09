@@ -1,6 +1,5 @@
 package com.example.Service.Concrete;
 
-import com.example.Controller.SeatController;
 import com.example.DTOs.Flight.Request.FlightAddedDto;
 import com.example.DTOs.Flight.Request.FlightUpdateDto;
 import com.example.DTOs.Flight.Response.FlightResponseDto;
@@ -10,7 +9,6 @@ import com.example.Repository.FlightRepository;
 import com.example.Service.Contrats.CompanyService;
 import com.example.Service.Contrats.FlightService;
 import com.example.Service.Contrats.SeatService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -41,14 +39,24 @@ public class FlightManager implements FlightService {
     }
     @Override
     public void add(FlightAddedDto flightAddedDto) {
-        Flight flight=modelMapper.map(flightAddedDto, Flight.class);
-        flight.setCompany( modelMapper.map(this.companyService.getById(flightAddedDto.getCompanyId()), Company.class));
-        Long id = this.flightRepository.save(modelMapper.map(flightAddedDto, Flight.class)).getId();
-        this.seatService.add(id, flightAddedDto.getCapacity());
+       
+
+        Flight flight=extracted(flightAddedDto);
+        flight= this.flightRepository.save(flight);
+        this.seatService.add(flight.getId(), flight.getCapacity());
 
 
     }
-
+    private Flight extracted(FlightAddedDto flightAddedDto) {
+        Flight flight=new Flight();
+        flight.setCompany( modelMapper.map(this.companyService.getById(flightAddedDto.getCompanyId()), Company.class));
+        flight.setPrice(flightAddedDto.getPrice());
+        flight.setCapacity(flightAddedDto.getCapacity());
+        flight.setFlyType(flightAddedDto.getFlyType());
+        flight.setBusinessCapacity(flight.getBusinessCapacity());
+        flight.setBusinessExtra(flight.getBusinessExtra());
+        return flight;
+    }
     @Override
     public FlightResponseDto deleteByid(Long id) {
         Optional<Flight> flight = flightRepository.findById(id);
@@ -70,6 +78,7 @@ public class FlightManager implements FlightService {
         for (Flight value : flightList) {
             FlightResponseDto map = modelMapper.map(value, FlightResponseDto.class);
             map.setCompanyId(value.getCompany().getId());
+            //map.setSeatList(this.seatService.getAllByFlightId(map.getId()));
             list.add(map);
         }
         return list;

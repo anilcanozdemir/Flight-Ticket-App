@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column
     private Long id;
 
     @ManyToOne

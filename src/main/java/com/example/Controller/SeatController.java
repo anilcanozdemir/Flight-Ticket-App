@@ -38,7 +38,11 @@ public class SeatController {
         return this.seatService.getById(seatId);
 
     }
+    @GetMapping("/getByFlightIdAndSeatNumber")
+    SeatResponseDto getByFlightIdAndSeatNumber(@RequestParam String seatNumber,@RequestParam Long flightId) {
+        return this.seatService.getByFlightIdAndSeatNumber(seatNumber,flightId);
 
+    }
     @PostMapping("/updateById")
     void updateById(@RequestBody SeatUpdateDto seatUpdateDto) {
         this.seatService.updateById(seatUpdateDto);
@@ -49,6 +53,26 @@ public class SeatController {
     SeatResponseDto deleteById(@RequestParam Long seatId) {
         return this.seatService.deleteByid(seatId);
     }
+    @GetMapping("/getPriceById")
+    double getPriceById(@RequestParam Long id)
+    {
+        return this.seatService.getPriceById(id);
+    }
+    @GetMapping("/getPriceByIdList")
 
+    double getPriceByIdList(@RequestBody List<Long> idList)
+    {
+        return this.seatService.getPriceByIdList(idList);
+    }
+    @GetMapping("/buyById")
+    double buyById(@RequestParam Long id)
+    {
+        return this.seatService.buyById(id);
+    }
+    @GetMapping("/buyByIdList")
 
+    double buyByIdList(@RequestBody List<Long> idList)
+    {
+        return this.seatService.buyByIdList(idList);
+    }
 }

@@ -16,14 +16,14 @@ import java.util.List;
 public class Flight {
     @Column
     private int capacity;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "flight")
+    @OneToMany(mappedBy = "flight")
     private List<Seat> seatList;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "companyId")
     private Company company;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "flightId")
+    @Column
     private Long id;
     @Column
     @Enumerated(EnumType.STRING)
