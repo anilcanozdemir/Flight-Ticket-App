@@ -1,4 +1,4 @@
-package com.example.Entity;
+package com.example.Enums.Entity;
 
 
 import com.example.Enums.FlyType;
@@ -24,14 +24,14 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long id;
+    private Long flightId;
     @Column
     @Enumerated(EnumType.STRING)
     private FlyType flyType;
     @Column
-    private double price;
+    private Double price;
     @Column
-    private double businessExtra;
+    private Double businessExtra;
     @Column
     private int businessCapacity;
 

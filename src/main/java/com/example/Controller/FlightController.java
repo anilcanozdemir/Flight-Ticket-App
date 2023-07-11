@@ -1,10 +1,12 @@
 package com.example.Controller;
 
 
+import com.example.Core.Result.DataResult;
+import com.example.Core.Result.Result;
 import com.example.DTOs.Flight.Request.FlightAddedDto;
 import com.example.DTOs.Flight.Request.FlightUpdateDto;
 import com.example.DTOs.Flight.Response.FlightResponseDto;
-import com.example.Service.Contrats.FlightService;
+import com.example.Service.Contrats.Service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,25 +24,25 @@ public class FlightController {
     }
 
     @GetMapping("/getAll")
-    List<FlightResponseDto> getAll() {
+    DataResult<List<FlightResponseDto>> getAll() {
         return this.flightService.getAll();
 
     }
 
     @GetMapping("/getById")
-    FlightResponseDto getById(@RequestParam Long flightId) {
+    DataResult<FlightResponseDto> getById(@RequestParam Long flightId) {
         return this.flightService.getById(flightId);
 
     }
 
     @PostMapping("/updateById")
-    void updateById(@RequestBody FlightUpdateDto flightUpdateDto) {
-        this.flightService.updateById(flightUpdateDto);
+    Result updateById(@RequestBody FlightUpdateDto flightUpdateDto) {
+        return this.flightService.updateById(flightUpdateDto);
 
     }
 
     @PostMapping("/deleteById")
-    FlightResponseDto deleteById(@RequestParam Long flightId) {
+    DataResult<FlightResponseDto> deleteById(@RequestParam Long flightId) {
         return this.flightService.deleteByid(flightId);
     }
 }

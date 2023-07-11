@@ -2,21 +2,28 @@ package com.example.Service.Concrete;
 
 
 import com.example.Constants.Constants;
+import com.example.Core.Exception.EntityListEmptyException.SeatListEmptyException;
+import com.example.Core.Exception.EntityNotFoundException.SeatNotFoundException;
+import com.example.Core.Exception.EntityAlreadyExist.SeatAlreadyExistException;
+import com.example.Core.Exception.SeatIdListEmptyException;
+import com.example.Core.Result.DataResult;
+import com.example.Core.Result.Result;
+import com.example.Core.Result.SuccessDataResult;
+import com.example.Core.Result.SuccessResult;
 import com.example.DTOs.Seat.Request.SeatAddDto;
 import com.example.DTOs.Seat.Request.SeatUpdateDto;
 import com.example.DTOs.Seat.Response.SeatResponseDto;
-import com.example.Entity.Flight;
-import com.example.Entity.Seat;
+import com.example.Enums.Entity.Flight;
+import com.example.Enums.Entity.Seat;
 import com.example.Enums.SeatNumber;
 import com.example.Enums.SeatType;
 import com.example.Repository.SeatRepository;
-import com.example.Service.Contrats.FlightService;
-import com.example.Service.Contrats.SeatService;
+import com.example.Service.Contrats.Service.FlightService;
+import com.example.Service.Contrats.Service.SeatService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +45,13 @@ public class SeatManager implements SeatService {
     }
 
     @Override
-    public void add(Long id, int capacity) {
+    public Result add(Long id, int capacity) {
         String[] seatNumbers = SeatNumber.generateSeatNumbers(capacity / Constants.SEATS_PER_ROW, Constants.SEATS_PER_ROW);
+
         for (int i = 0; i < capacity; i++) {
             Seat seat = new Seat();
             seat.setSeatNumber(seatNumbers[i]);
-            if (i < this.flightService.getById(id).getBusinessCapacity()) {
+            if (i < this.flightService.getById(id).getData().getBusinessCapacity()) {
                 seat.setSeatType(SeatType.BUSINESS);
             } else {
                 seat.setSeatType(SeatType.ECONOMY);
@@ -53,152 +61,173 @@ public class SeatManager implements SeatService {
 
             this.seatRepository.save(seat);
         }
+        return new SuccessResult("Seats for Flight with id" + id + "and capacity" + capacity + " are created.");
     }
 
     @Override
-    public double getPriceById(Long id) {
-        Optional<Seat> seat= this.seatRepository.findById(id);
+    public DataResult<Double> getPriceById(Long id) {
+        Optional<Seat> seat = this.seatRepository.findById(id);
 
-        if(seat.isPresent())
-        {
-            double price=seat.get().getFlight().getPrice();
-            if(seat.get().getSeatType() == SeatType.BUSINESS)
-                price+=seat.get().getFlight().getBusinessExtra();
-            return price;
+        if (seat.isPresent()) {
+            Double price = seat.get().getFlight().getPrice();
+            if (seat.get().getSeatType() == SeatType.BUSINESS)
+                price += seat.get().getFlight().getBusinessExtra();
+            return new SuccessDataResult<>("", price);
         }
-        return 0;
+        throw new SeatNotFoundException(id);
     }
 
     @Override
-    public double getPriceByIdList(List<Long> idList) {
-        double price=0;
-        if(idList.isEmpty())
-        {
-            return price;
+    public DataResult<Double> getPriceByIdList(List<Long> idList) {
+        Double price = 0.0;
+        if (idList.isEmpty()) {
+            throw new SeatIdListEmptyException();
         }
 
-        for (Long id:
-             idList) {
-            Optional<Seat> seat= this.seatRepository.findById(id);
-
-            if(seat.isPresent())
-            {
-                price+=seat.get().getFlight().getPrice();
-                if(seat.get().getSeatType() == SeatType.BUSINESS)
-                    price+=seat.get().getFlight().getBusinessExtra();
+        for (Long id :
+                idList) {
+            Optional<Seat> seat = this.seatRepository.findById(id);
+            if (seat.isEmpty()) {
+                throw new SeatNotFoundException(id);
             }
+
+            price += seat.get().getFlight().getPrice();
+            if (seat.get().getSeatType() == SeatType.BUSINESS)
+                price += seat.get().getFlight().getBusinessExtra();
+
+
         }
-        return price;
+        return new SuccessDataResult<>(price);
 
     }
 
     @Override
-    public double buyById(Long id) {
-        Optional<Seat> seat= this.seatRepository.findById(id);
+    public DataResult<Double> buyById(Long id) {
+        Optional<Seat> seat = this.seatRepository.findById(id);
+        if (seat.isEmpty()) {
+            throw new SeatNotFoundException(id);
+        }
 
-        if(seat.isPresent())
-        {
-            double price=seat.get().getFlight().getPrice();
-            if(seat.get().getSeatType() == SeatType.BUSINESS)
-                price+=seat.get().getFlight().getBusinessExtra();
+        Double price = seat.get().getFlight().getPrice();
+        if (seat.get().getSeatType() == SeatType.BUSINESS)
+            price += seat.get().getFlight().getBusinessExtra();
+        seat.get().setFullled(true);
+        this.seatRepository.save(seat.get());
+        return new SuccessDataResult<>(price);
+
+
+    }
+
+    @Override
+    public DataResult<Double> buyByIdList(List<Long> idList) {
+        Double price = 0.0;
+        if (idList.isEmpty()) {
+            throw new SeatIdListEmptyException();
+        }
+
+        for (Long id :
+                idList) {
+            Optional<Seat> seat = this.seatRepository.findById(id);
+            if (seat.isEmpty()) {
+                throw new SeatNotFoundException(id);
+            }
+
+            price += seat.get().getFlight().getPrice();
+            if (seat.get().getSeatType() == SeatType.BUSINESS)
+                price += seat.get().getFlight().getBusinessExtra();
             seat.get().setFullled(true);
             this.seatRepository.save(seat.get());
-            return price;
+
         }
-        return 0;
+        return new SuccessDataResult<>(price);
     }
 
     @Override
-    public double buyByIdList(List<Long> idList) {
-        double price=0;
-        if(idList.isEmpty())
-        {
-            return price;
+    public DataResult<SeatResponseDto> getByFlightIdAndSeatNumber(String seatNumber, Long flightId) {
+        Optional<Seat> seat = seatRepository.findByFlight_FlightIdAndSeatNumber(flightId, seatNumber);
+        if (seat.isEmpty())
+            throw new SeatNotFoundException(seatNumber, flightId);
+        return new SuccessDataResult<>(modelMapper.map(seat.get(), SeatResponseDto.class));
+    }
+
+    @Override
+    public Result add(SeatAddDto seatAddDto) {
+        Optional<Seat> optional = seatRepository.findByFlight_FlightIdAndSeatNumber(seatAddDto.getFlightId(), seatAddDto.getSeatNumber());
+        if (optional.isPresent()) {
+            throw new SeatAlreadyExistException(seatAddDto.getFlightId(), seatAddDto.getSeatNumber());
         }
-
-        for (Long id:
-                idList) {
-            Optional<Seat> seat= this.seatRepository.findById(id);
-
-            if(seat.isPresent())
-            {
-                price+=seat.get().getFlight().getPrice();
-                if(seat.get().getSeatType() == SeatType.BUSINESS)
-                    price+=seat.get().getFlight().getBusinessExtra();
-                seat.get().setFullled(true);
-                this.seatRepository.save(seat.get());
-            }
-        }
-        return price;
+        Seat seat = this.seatRepository.save(modelMapper.map(seatAddDto, Seat.class));
+        return new SuccessResult("Seat  " + seat.getSeatId() + "     başarıyla Eklendi.");
     }
 
     @Override
-    public SeatResponseDto getByFlightIdAndSeatNumber(String seatNumber, Long flightId) {
-       return modelMapper.map(this.seatRepository.findByFlightIdAndSeatNumber(flightId,seatNumber),SeatResponseDto.class);
-    }
-
-    @Override
-    public void add(SeatAddDto seatAddDto) {
-        this.seatRepository.save(modelMapper.map(seatAddDto, Seat.class));
-
-    }
-
-    @Override
-    public SeatResponseDto deleteByid(Long id) {
+    public DataResult<SeatResponseDto> deleteByid(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
-        if (seat.isPresent()) {
-            SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
-            map.setFlightId(seat.get().getFlight().getId());
-            this.seatRepository.delete(seat.get());
-            return map;
+        if (seat.isEmpty()) {
+            throw new SeatNotFoundException(id);
         }
-        return null;
+
+        SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
+        map.setFlightId(seat.get().getFlight().getFlightId());
+        this.seatRepository.delete(seat.get());
+        return new SuccessDataResult<>(map);
+
 
     }
 
     @Override
-    public List<SeatResponseDto> getAll() {
+    public DataResult<List<SeatResponseDto>> getAll() {
         List<Seat> seatList = this.seatRepository.findAll();
-        List<SeatResponseDto> list = new ArrayList<>();
-        for (Seat value : seatList) {
+
+
+         return new SuccessDataResult<>(
+                 "SeatList is successfully called.",
+                 seatList.stream().map(value->
+        {
             SeatResponseDto map = modelMapper.map(value, SeatResponseDto.class);
-            map.setFlightId(value.getFlight().getId());
-            list.add(map);
-        }
-        return list;
-    }
-
-    @Override
-    public SeatResponseDto getById(Long id) {
-        Optional<Seat> seat = seatRepository.findById(id);
-        if (seat.isPresent()) {
-            SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
-            map.setFlightId(seat.get().getFlight().getId());
-            this.seatRepository.delete(seat.get());
+            map.setFlightId(value.getFlight().getFlightId());
             return map;
+        }).toList());
+
+    }
+
+    @Override
+    public DataResult<SeatResponseDto> getById(Long id) {
+        Optional<Seat> seat = seatRepository.findById(id);
+        if(seat.isEmpty())
+        {
+            throw new SeatNotFoundException(id);
         }
-        return null;
+        SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
+        map.setFlightId(seat.get().getFlight().getFlightId());
+        this.seatRepository.delete(seat.get());
+        return new SuccessDataResult<>(map);
     }
 
     @Override
-    public void updateById(SeatUpdateDto seatUpdateDto) {
-        Seat seat = modelMapper.map(seatUpdateDto, Seat.class);
-        this.seatRepository.save(seat);
+    public Result updateById(SeatUpdateDto seatUpdateDto) {
+        Optional<Seat> seat = this.seatRepository.findById(seatUpdateDto.getSeatId());
+        if (seat.isEmpty()) {
+            throw new SeatNotFoundException(seatUpdateDto.getSeatId());
+        }
+        this.seatRepository.save(modelMapper.map(seatUpdateDto, Seat.class));
+        return new SuccessResult("Seat with id  " + seatUpdateDto.getSeatId() + "updated succesfully.");
     }
 
     @Override
-    public List<SeatResponseDto> getAllByFlightId(Long flightId) {
-        List<Seat> seatList = this.seatRepository.findAllByFlightId(flightId);
-        List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
-        for (Seat seat : seatList
-        ) {
+    public DataResult<List<SeatResponseDto>> getAllByFlightId(Long flightId) {
+        List<Seat> seatList = seatRepository.findByFlight_FlightId(flightId);
+        if(seatList.isEmpty())
+        {
+            throw new SeatListEmptyException(flightId);
+        }
 
+       return new SuccessDataResult<>( seatList.stream().map(seat -> {
             SeatResponseDto seatResponseDto = this.modelMapper.map(seat, SeatResponseDto.class);
-            seatResponseDto.setFlightId(seat.getFlight().getId());
-            seatResponseDtos.add(seatResponseDto);
+            seatResponseDto.setFlightId(seat.getFlight().getFlightId());
+            return seatResponseDto;
+        }).toList());
 
-        }
-        return seatResponseDtos;
     }
 
 

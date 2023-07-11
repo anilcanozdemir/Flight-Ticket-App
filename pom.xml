@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Homework3</artifactId>
+	<artifactId>FlightTicketApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Homework3</name>
 	<description>Redoing homework3 of code16 Spring BootCamp</description>

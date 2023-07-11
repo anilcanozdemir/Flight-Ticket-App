@@ -1,6 +1,5 @@
-package com.example.Entity;
+package com.example.Enums.Entity;
 
-import com.example.Enums.SeatNumber;
 import com.example.Enums.SeatType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +13,7 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long id;
+    private Long seatId;
 
     @ManyToOne
     @JoinColumn(name = "flightId")

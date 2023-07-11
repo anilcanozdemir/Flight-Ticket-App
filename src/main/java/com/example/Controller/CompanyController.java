@@ -1,10 +1,12 @@
 package com.example.Controller;
 
 
+import com.example.Core.Result.DataResult;
+import com.example.Core.Result.Result;
 import com.example.DTOs.Company.Request.CompanyAddedDto;
 import com.example.DTOs.Company.Request.CompanyUpdateDto;
 import com.example.DTOs.Company.Response.CompanyResponseDto;
-import com.example.Service.Contrats.CompanyService;
+import com.example.Service.Contrats.Service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,25 +25,25 @@ public class CompanyController {
     }
 
     @GetMapping("/getAll")
-    public List<CompanyResponseDto> getAll() {
+    public DataResult<List<CompanyResponseDto>> getAll() {
         return this.companyService.getAll();
 
     }
 
     @GetMapping("/getById")
-    public CompanyResponseDto getById(@RequestParam Long companyId) {
+    public DataResult<CompanyResponseDto> getById(@RequestParam Long companyId) {
         return this.companyService.getById(companyId);
 
     }
 
     @PostMapping("/updateById")
-    public void updateById(@RequestBody CompanyUpdateDto companyUpdateDto) {
-        this.companyService.updateById(companyUpdateDto);
+    public Result updateById(@RequestBody CompanyUpdateDto companyUpdateDto) {
+        return this.companyService.updateById(companyUpdateDto);
 
     }
 
     @PostMapping("/deleteById")
-    public CompanyResponseDto deleteById(@RequestParam Long companyId) {
+    public DataResult<CompanyResponseDto> deleteById(@RequestParam Long companyId) {
         return this.companyService.deleteByid(companyId);
     }
 

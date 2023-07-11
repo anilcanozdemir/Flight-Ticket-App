@@ -9,4 +9,6 @@ import lombok.Setter;
 @Setter
 public class CompanyAddedDto {
     private String name;
+
+
 }

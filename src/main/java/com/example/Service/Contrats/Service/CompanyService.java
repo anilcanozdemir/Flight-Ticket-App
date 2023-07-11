@@ -1,4 +1,4 @@
-package com.example.Service.Contrats;
+package com.example.Service.Contrats.Service;
 
 import com.example.DTOs.Company.Request.CompanyAddedDto;
 import com.example.DTOs.Company.Request.CompanyUpdateDto;

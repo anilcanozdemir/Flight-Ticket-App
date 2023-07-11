@@ -1,4 +1,4 @@
-package com.example.Service.Contrats;
+package com.example.Service.Contrats.Service;
 
 import com.example.DTOs.Flight.Request.FlightAddedDto;
 import com.example.DTOs.Flight.Request.FlightUpdateDto;

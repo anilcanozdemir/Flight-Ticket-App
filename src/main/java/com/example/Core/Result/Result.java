@@ -1,6 +1,6 @@
 package com.example.Core.Result;
 
-public class Result {
+public abstract class Result {
     public Result(boolean success)
     {
         this.success=success;

@@ -1,17 +1,22 @@
 package com.example.Service.Concrete;
 
+import com.example.Core.Exception.EntityListEmptyException.CompanyListEmptyException;
+import com.example.Core.Exception.EntityAlreadyExist.CompanyAlreadyExistsException;
+import com.example.Core.Exception.EntityNotFoundException.CompanyNotFoundException;
+import com.example.Core.Result.DataResult;
+import com.example.Core.Result.Result;
+import com.example.Core.Result.SuccessDataResult;
+import com.example.Core.Result.SuccessResult;
 import com.example.DTOs.Company.Request.CompanyAddedDto;
 import com.example.DTOs.Company.Request.CompanyUpdateDto;
 import com.example.DTOs.Company.Response.CompanyResponseDto;
-import com.example.Entity.Company;
+import com.example.Enums.Entity.Company;
 import com.example.Repository.CompanyRepository;
-import com.example.Service.Contrats.CompanyService;
+import com.example.Service.Contrats.Service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,39 +30,69 @@ public class CompanyManager implements CompanyService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void add(CompanyAddedDto companyAddedDto) {
+    public Result add(CompanyAddedDto companyAddedDto) {
+        Optional<Company> company = companyRepository.findByName(companyAddedDto.getName());
+        if (company.isPresent()) {
+            throw new CompanyAlreadyExistsException(companyAddedDto.getName());
+        }
+
         this.companyRepository.save(modelMapper.map(companyAddedDto, Company.class));
+        return new SuccessResult(companyAddedDto.getName() + " firması başarıyla kaydedildi.");
+
 
     }
 
     @Override
-    public CompanyResponseDto deleteByid(Long id) {
+    public DataResult<CompanyResponseDto> deleteByid(Long id) {
         Optional<Company> company = companyRepository.findById(id);
         company.ifPresent(companyRepository::delete);
-        return company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).orElse(null);
+        return new SuccessDataResult<>(
+                "Company with id  " + id + "  deleted successfully.",
+
+                company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).
+                        orElseThrow(() -> new CompanyNotFoundException(id))
+        );
+
     }
 
     @Override
-    public List<CompanyResponseDto> getAll() {
+    public DataResult<List<CompanyResponseDto>> getAll() {
         List<Company> companyList = this.companyRepository.findAll();
-        List<CompanyResponseDto> list = new ArrayList<>();
-        for (Company value : companyList) {
-            CompanyResponseDto map = modelMapper.map(value, CompanyResponseDto.class);
-            list.add(map);
+        if (companyList.isEmpty()) {
+            throw new CompanyListEmptyException();
         }
-        return list;
+        return new SuccessDataResult<>("CompanyList successfully called.",
+                companyList.stream().map(x -> modelMapper.map(x, CompanyResponseDto.class)).
+                        toList()
+        );
+
     }
 
     @Override
-    public CompanyResponseDto getById(Long id) {
-        Optional<Company> company = companyRepository.findById(id);
-        return company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).orElse(null);
+    public DataResult<CompanyResponseDto> getById(Long id) {
+        Optional<Company> company = this.companyRepository.findById(id);
+        return new SuccessDataResult<>(
+                "Company with id " + id + "successfully called.",
+                company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).
+                        orElseThrow(() -> new CompanyNotFoundException(id))
+        );
     }
 
     @Override
-    public void updateById(CompanyUpdateDto companyUpdateDto) {
-        Company company = modelMapper.map(companyUpdateDto, Company.class);
-        this.companyRepository.save(company);
+    public Result updateById(CompanyUpdateDto companyUpdateDto) {
+        Optional<Company> companyOld = this.companyRepository.findById(companyUpdateDto.getCompanyId());
+        if (companyOld.isPresent()) {
+            if (!(companyOld.get().getName().equals(companyUpdateDto.getName()))) {
+                Optional<Company> company = companyRepository.findByName(companyUpdateDto.getName());
+                company.ifPresent(x -> {
+                    throw new CompanyAlreadyExistsException(x.getName());
+                });
+            }
+            this.companyRepository.save(this.modelMapper.map(companyUpdateDto, Company.class));
+            return new SuccessResult(companyUpdateDto.getName());
+        }
+        throw new CompanyNotFoundException(companyUpdateDto.getName());
+
 
     }
 }

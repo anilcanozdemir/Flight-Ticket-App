@@ -1,4 +1,4 @@
-package com.example.Entity;
+package com.example.Enums.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class Company {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long companyId;
     @OneToMany(mappedBy = "company")
     private List<Flight> flightList;
     @Column

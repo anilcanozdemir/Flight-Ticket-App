@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class SeatResponseDto {
 
-    private Long id;
+    private Long seatId;
 
 
     private Long flightId;
