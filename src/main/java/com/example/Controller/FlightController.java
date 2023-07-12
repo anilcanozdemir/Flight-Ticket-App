@@ -8,6 +8,8 @@ import com.example.DTOs.Flight.Request.FlightUpdateDto;
 import com.example.DTOs.Flight.Response.FlightResponseDto;
 import com.example.Service.Contrats.Service.FlightService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,30 +21,34 @@ public class FlightController {
     private final FlightService flightService;
 
     @PostMapping("/add")
-    void add(@RequestBody FlightAddedDto flightAddedDto) {
-        this.flightService.add(flightAddedDto);
+    ResponseEntity<Result> add(@RequestBody FlightAddedDto flightAddedDto) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body( this.flightService.add(flightAddedDto));
     }
 
     @GetMapping("/getAll")
-    DataResult<List<FlightResponseDto>> getAll() {
-        return this.flightService.getAll();
+    ResponseEntity<DataResult<List<FlightResponseDto>>> getAll() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(  this.flightService.getAll());
 
     }
 
     @GetMapping("/getById")
-    DataResult<FlightResponseDto> getById(@RequestParam Long flightId) {
-        return this.flightService.getById(flightId);
+    ResponseEntity<DataResult<FlightResponseDto>> getById(@RequestParam Long flightId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(  this.flightService.getById(flightId));
 
     }
 
     @PostMapping("/updateById")
-    Result updateById(@RequestBody FlightUpdateDto flightUpdateDto) {
-        return this.flightService.updateById(flightUpdateDto);
+    ResponseEntity<Result> updateById(@RequestBody FlightUpdateDto flightUpdateDto) {
 
+        return ResponseEntity.status(HttpStatus.OK).body(  this.flightService.updateById(flightUpdateDto));
     }
 
     @PostMapping("/deleteById")
-    DataResult<FlightResponseDto> deleteById(@RequestParam Long flightId) {
-        return this.flightService.deleteByid(flightId);
+    ResponseEntity<DataResult<FlightResponseDto>> deleteById(@RequestParam Long flightId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(  this.flightService.deleteByid(flightId));
     }
 }

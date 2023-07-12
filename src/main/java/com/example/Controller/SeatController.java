@@ -8,6 +8,8 @@ import com.example.DTOs.Seat.Request.SeatUpdateDto;
 import com.example.DTOs.Seat.Response.SeatResponseDto;
 import com.example.Service.Contrats.Service.SeatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,62 +21,70 @@ public class SeatController {
     private final SeatService seatService;
 
     @PostMapping("/deleteById")
-    DataResult<SeatResponseDto> deleteById(@RequestParam Long seatId) {
-        return this.seatService.deleteByid(seatId);
+    ResponseEntity<DataResult<SeatResponseDto>> deleteById(@RequestParam Long seatId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(   this.seatService.deleteByid(seatId));
     }
 
     @PostMapping("/add")
-    Result add(SeatAddDto seatAddedDto) {
-        return this.seatService.add(seatAddedDto);
+    ResponseEntity<Result> add(SeatAddDto seatAddedDto) {
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body( this.seatService.add(seatAddedDto));
     }
 
     @GetMapping("/getAll")
-    DataResult<List<SeatResponseDto>> getAll() {
-        return this.seatService.getAll();
+    ResponseEntity<DataResult<List<SeatResponseDto>>> getAll() {
 
+        return ResponseEntity.status(HttpStatus.OK).body(   this.seatService.getAll());
     }
 
     @GetMapping("/getAllByFlightId")
-    DataResult<List<SeatResponseDto>> getAll(@RequestParam Long flightId) {
-        return this.seatService.getAllByFlightId(flightId);
+    ResponseEntity<DataResult<List<SeatResponseDto>>> getAll(@RequestParam Long flightId) {
 
+        return ResponseEntity.status(HttpStatus.OK).body(   this.seatService.getAllByFlightId(flightId));
     }
 
     @GetMapping("/getById")
-    DataResult<SeatResponseDto> getById(@RequestParam Long seatId) {
-        return this.seatService.getById(seatId);
+    ResponseEntity<DataResult<SeatResponseDto>> getById(@RequestParam Long seatId) {
 
+
+        return ResponseEntity.status(HttpStatus.OK).body(  this.seatService.getById(seatId));
     }
 
     @GetMapping("/getByFlightIdAndSeatNumber")
-    DataResult<SeatResponseDto> getByFlightIdAndSeatNumber(@RequestParam String seatNumber, @RequestParam Long flightId) {
-        return this.seatService.getByFlightIdAndSeatNumber(seatNumber, flightId);
+    ResponseEntity<DataResult<SeatResponseDto>> getByFlightIdAndSeatNumber(@RequestParam String seatNumber, @RequestParam Long flightId) {
 
+        return ResponseEntity.status(HttpStatus.OK).body( this.seatService.getByFlightIdAndSeatNumber(seatNumber, flightId));
     }
 
     @PostMapping("/updateById")
-    Result updateById(@RequestBody SeatUpdateDto seatUpdateDto) {
-        return this.seatService.updateById(seatUpdateDto);
+    ResponseEntity<Result> updateById(@RequestBody SeatUpdateDto seatUpdateDto) {
 
+        return ResponseEntity.status(HttpStatus.OK).body( this.seatService.updateById(seatUpdateDto));
     }
 
     @GetMapping("/getPriceById")
-    DataResult<Double> getPriceById(@RequestParam Long id) {
-        return this.seatService.getPriceById(id);
+    ResponseEntity<DataResult<Double>> getPriceById(@RequestParam Long id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body( this.seatService.getPriceById(id));
     }
 
     @GetMapping("/getPriceByIdList")
-    DataResult<Double> getPriceByIdList(@RequestBody List<Long> idList) {
-        return this.seatService.getPriceByIdList(idList);
+    ResponseEntity<DataResult<Double>> getPriceByIdList(@RequestBody List<Long> idList) {
+
+        return ResponseEntity.status(HttpStatus.OK).body( this.seatService.getPriceByIdList(idList));
     }
 
     @GetMapping("/buyById")
-    DataResult<Double> buyById(@RequestParam Long id) {
-        return this.seatService.buyById(id);
+    ResponseEntity<DataResult<Double>> buyById(@RequestParam Long id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body( this.seatService.buyById(id));
     }
 
     @GetMapping("/buyByIdList")
-    DataResult<Double> buyByIdList(@RequestBody List<Long> idList) {
-        return this.seatService.buyByIdList(idList);
+    ResponseEntity<DataResult<Double>> buyByIdList(@RequestBody List<Long> idList) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(  this.seatService.buyByIdList(idList));
     }
 }
