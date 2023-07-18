@@ -23,7 +23,7 @@ public class FlightUpdateDto {
     private Long flightId;
     @NotNull(message = "flyType can not be empty")
 
-   // @ValueOfEnum(enumClass = FlyType.class,message = "Invalid term Fly Type")
+    // @ValueOfEnum(enumClass = FlyType.class,message = "Invalid term Fly Type")
     private FlyType flyType;
     @NotNull(message = "price can not be empty")
     private double price;

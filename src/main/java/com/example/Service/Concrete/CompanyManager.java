@@ -45,17 +45,13 @@ public class CompanyManager implements CompanyService {
     @Override
     public DataResult<CompanyResponseDto> deleteByid(Long id) {
         Optional<Company> company = companyRepository.findById(id);
-        if(company.isEmpty())
-        {
+        if (company.isEmpty()) {
             throw new CompanyNotFoundException(id);
         }
         company.ifPresent(companyRepository::delete);
-        return new SuccessDataResult<>(
-                "Company with id  " + id + "  deleted successfully.",
+        return new SuccessDataResult<>("Company with id  " + id + "  deleted successfully.",
 
-                company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).
-                        orElseThrow(() -> new CompanyNotFoundException(id))
-        );
+                company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).orElseThrow(() -> new CompanyNotFoundException(id)));
 
     }
 
@@ -65,21 +61,14 @@ public class CompanyManager implements CompanyService {
         if (companyList.isEmpty()) {
             throw new CompanyListEmptyException();
         }
-        return new SuccessDataResult<>("CompanyList successfully called.",
-                companyList.stream().map(x -> modelMapper.map(x, CompanyResponseDto.class)).
-                        toList()
-        );
+        return new SuccessDataResult<>("CompanyList successfully called.", companyList.stream().map(x -> modelMapper.map(x, CompanyResponseDto.class)).toList());
 
     }
 
     @Override
     public DataResult<CompanyResponseDto> getById(Long id) {
         Optional<Company> company = this.companyRepository.findById(id);
-        return new SuccessDataResult<>(
-                "Company with id " + id + "successfully called.",
-                company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).
-                        orElseThrow(() -> new CompanyNotFoundException(id))
-        );
+        return new SuccessDataResult<>("Company with id " + id + "successfully called.", company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).orElseThrow(() -> new CompanyNotFoundException(id)));
     }
 
     @Override

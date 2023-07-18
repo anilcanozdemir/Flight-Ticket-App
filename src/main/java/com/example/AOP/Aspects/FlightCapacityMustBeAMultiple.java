@@ -2,7 +2,7 @@ package com.example.AOP.Aspects;
 
 
 import com.example.AOP.Validators.FlightCapacityValidator;
-import com.example.Constants.Constants;
+import com.example.Constants.BusinessConstants;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = {FlightCapacityValidator.class})
 public @interface FlightCapacityMustBeAMultiple {
-    String message() default "FlightCapacity must be a value which is a multiple of SEATS_PER_ROW\t" + Constants.SEATS_PER_ROW;
+    String message() default "FlightCapacity must be a value which is a multiple of SEATS_PER_ROW\t" + BusinessConstants.SEATS_PER_ROW;
 
     Class<?>[] groups() default {};
 

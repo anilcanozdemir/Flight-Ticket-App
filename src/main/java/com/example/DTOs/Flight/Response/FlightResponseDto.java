@@ -24,5 +24,5 @@ public class FlightResponseDto {
 
     private int businessCapacity;
 
-  //  private List<SeatResponseDto> seatList;
+    //  private List<SeatResponseDto> seatList;
 }

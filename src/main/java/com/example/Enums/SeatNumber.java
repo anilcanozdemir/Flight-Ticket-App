@@ -1,6 +1,6 @@
 package com.example.Enums;
 
-import com.example.Constants.Constants;
+import com.example.Constants.BusinessConstants;
 
 public enum SeatNumber {
 
@@ -13,16 +13,17 @@ public enum SeatNumber {
 
         for (int row = 0; row < numRows; row++) {
             for (int seat = 1; seat <= seatsPerRow; seat++) {
-                seatNumbers[index++] = String.valueOf(SeatNumber.values()[row])+seat;
+                seatNumbers[index++] = String.valueOf(SeatNumber.values()[row]) + seat;
             }
         }
 
         return seatNumbers;
     }
+
     public static int getIndexFromSeatNumber(String seatNumber) {
         char letter = seatNumber.charAt(0);
         int number = Integer.parseInt(seatNumber.substring(1));
         int row = letter - 'A';
-        return (row * Constants.SEATS_PER_ROW) + (number - 1);
+        return (row * BusinessConstants.SEATS_PER_ROW) + (number - 1);
     }
 }

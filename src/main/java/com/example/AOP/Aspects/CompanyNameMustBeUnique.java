@@ -15,6 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {CompanyNameValidator.class})
 public @interface CompanyNameMustBeUnique {
     String message() default "Company name must be unique.";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

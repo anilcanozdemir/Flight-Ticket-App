@@ -15,6 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {BusinessCapacityCantExceedFlightCapacityValidator.class})
 public @interface BusinessCapacityCantExceedFlightCapacity {
     String message() default "Flight capacity must be greater than business capacity.";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

@@ -20,7 +20,7 @@ public class SeatAddDto {
     private boolean fullled;
     @NotNull(message = "seatType can not be empty")
 
-  //  @ValueOfEnum(enumClass = SeatType.class,message = "Invalid term Seat Type")
+    //  @ValueOfEnum(enumClass = SeatType.class,message = "Invalid term Seat Type")
     private SeatType seatType;
 
 }

@@ -22,7 +22,7 @@ public class FlightController {
     private final FlightService flightService;
 
     @PostMapping("/add")
-    ResponseEntity<Result> add(@Valid  @RequestBody FlightAddedDto flightAddedDto) {
+    ResponseEntity<Result> add(@Valid @RequestBody FlightAddedDto flightAddedDto) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.flightService.add(flightAddedDto));
     }

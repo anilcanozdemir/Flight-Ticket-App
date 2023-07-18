@@ -1,7 +1,7 @@
 package com.example.Service.Concrete;
 
 
-import com.example.Constants.Constants;
+import com.example.Constants.BusinessConstants;
 import com.example.Core.Exception.EntityAlreadyExist.SeatAlreadyExistException;
 import com.example.Core.Exception.EntityListEmptyException.SeatListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.SeatNotFoundException;
@@ -46,7 +46,7 @@ public class SeatManager implements SeatService {
 
     @Override
     public Result add(Long id, int capacity) {
-        String[] seatNumbers = SeatNumber.generateSeatNumbers(capacity / Constants.SEATS_PER_ROW, Constants.SEATS_PER_ROW);
+        String[] seatNumbers = SeatNumber.generateSeatNumbers(capacity / BusinessConstants.SEATS_PER_ROW, BusinessConstants.SEATS_PER_ROW);
 
         for (int i = 0; i < capacity; i++) {
             Seat seat = new Seat();
@@ -178,25 +178,24 @@ public class SeatManager implements SeatService {
     @Override
     public DataResult<List<SeatResponseDto>> getAll() {
         List<Seat> seatList = this.seatRepository.findAll();
-        if(seatList.isEmpty())
+        if (seatList.isEmpty())
             throw new SeatListEmptyException();
 
-         return new SuccessDataResult<>(
-                 "SeatList is successfully called.",
-                 seatList.stream().map(value->
-        {
-            SeatResponseDto map = modelMapper.map(value, SeatResponseDto.class);
-            map.setFlightId(value.getFlight().getFlightId());
-            return map;
-        }).toList());
+        return new SuccessDataResult<>(
+                "SeatList is successfully called.",
+                seatList.stream().map(value ->
+                {
+                    SeatResponseDto map = modelMapper.map(value, SeatResponseDto.class);
+                    map.setFlightId(value.getFlight().getFlightId());
+                    return map;
+                }).toList());
 
     }
 
     @Override
     public DataResult<SeatResponseDto> getById(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
-        if(seat.isEmpty())
-        {
+        if (seat.isEmpty()) {
             throw new SeatNotFoundException(id);
         }
         SeatResponseDto map = modelMapper.map(seat.get(), SeatResponseDto.class);
@@ -218,12 +217,11 @@ public class SeatManager implements SeatService {
     @Override
     public DataResult<List<SeatResponseDto>> getAllByFlightId(Long flightId) {
         List<Seat> seatList = seatRepository.findByFlight_FlightId(flightId);
-        if(seatList.isEmpty())
-        {
+        if (seatList.isEmpty()) {
             throw new SeatListEmptyException(flightId);
         }
 
-       return new SuccessDataResult<>( seatList.stream().map(seat -> {
+        return new SuccessDataResult<>(seatList.stream().map(seat -> {
             SeatResponseDto seatResponseDto = this.modelMapper.map(seat, SeatResponseDto.class);
             seatResponseDto.setFlightId(seat.getFlight().getFlightId());
             return seatResponseDto;

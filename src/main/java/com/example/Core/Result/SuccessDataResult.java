@@ -6,15 +6,15 @@ public class SuccessDataResult<Data> extends DataResult<Data> {
         super(true);
     }
 
-    public SuccessDataResult( Data data) {
+    public SuccessDataResult(Data data) {
         super(true, data);
     }
 
-    public SuccessDataResult( String message) {
+    public SuccessDataResult(String message) {
         super(true, message);
     }
 
-    public SuccessDataResult( String message, Data data) {
+    public SuccessDataResult(String message, Data data) {
         super(true, message, data);
     }
 }

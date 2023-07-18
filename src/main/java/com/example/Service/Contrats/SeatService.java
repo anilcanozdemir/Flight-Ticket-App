@@ -14,6 +14,7 @@ public interface SeatService extends BaseService<SeatResponseDto, SeatAddDto, Se
     Result add(Long id, int capacity);
 
     DataResult<Double> getPriceById(Long id);
+
     DataResult<Double> getPriceByIdList(List<Long> idList);
 
     DataResult<Double> buyById(Long id);

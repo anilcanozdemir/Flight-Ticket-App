@@ -1,6 +1,6 @@
 package com.example.Service.Concrete;
 
-import com.example.Constants.Constants;
+import com.example.Constants.BusinessConstants;
 import com.example.Core.Exception.EntityListEmptyException.FlightListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.FlightNotFoundException;
 import com.example.Core.Exception.FlightNonAcceptableCapacityException;
@@ -50,7 +50,7 @@ public class FlightManager implements FlightService {
 
 
         Flight flight = DtoToFlight(flightAddedDto);
-        if (flight.getCapacity() % Constants.SEATS_PER_ROW != 0) {
+        if (flight.getCapacity() % BusinessConstants.SEATS_PER_ROW != 0) {
             throw new FlightNonAcceptableCapacityException(flight.getCapacity());
         }
         flight = this.flightRepository.save(flight);
@@ -88,7 +88,7 @@ public class FlightManager implements FlightService {
     @Override
     public DataResult<List<FlightResponseDto>> getAll() {
         List<Flight> flightList = this.flightRepository.findAll();
-        if(flightList.isEmpty())
+        if (flightList.isEmpty())
             throw new FlightListEmptyException();
         return new SuccessDataResult<>(
                 "Flightlist is successfully called.",
@@ -109,7 +109,7 @@ public class FlightManager implements FlightService {
             FlightResponseDto map = modelMapper.map(flight.get(), FlightResponseDto.class);
             map.setCompanyId(flight.get().getCompany().getCompanyId());
             return new SuccessDataResult<>(
-                    "Flight with id"+id+"is successfully called",
+                    "Flight with id" + id + "is successfully called",
                     map);
         }
         throw new FlightNotFoundException(id);
