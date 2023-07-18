@@ -2,8 +2,8 @@ package com.example.Service.Concrete;
 
 import com.example.Constants.Constants;
 import com.example.Core.Exception.EntityListEmptyException.FlightListEmptyException;
-import com.example.Core.Exception.FlightNonAcceptableCapacityException;
 import com.example.Core.Exception.EntityNotFoundException.FlightNotFoundException;
+import com.example.Core.Exception.FlightNonAcceptableCapacityException;
 import com.example.Core.Result.DataResult;
 import com.example.Core.Result.Result;
 import com.example.Core.Result.SuccessDataResult;
@@ -11,12 +11,12 @@ import com.example.Core.Result.SuccessResult;
 import com.example.DTOs.Flight.Request.FlightAddedDto;
 import com.example.DTOs.Flight.Request.FlightUpdateDto;
 import com.example.DTOs.Flight.Response.FlightResponseDto;
-import com.example.Enums.Entity.Company;
-import com.example.Enums.Entity.Flight;
+import com.example.Entity.Company;
+import com.example.Entity.Flight;
 import com.example.Repository.FlightRepository;
-import com.example.Service.Contrats.Service.CompanyService;
-import com.example.Service.Contrats.Service.FlightService;
-import com.example.Service.Contrats.Service.SeatService;
+import com.example.Service.Contrats.CompanyService;
+import com.example.Service.Contrats.FlightService;
+import com.example.Service.Contrats.SeatService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -54,6 +54,7 @@ public class FlightManager implements FlightService {
             throw new FlightNonAcceptableCapacityException(flight.getCapacity());
         }
         flight = this.flightRepository.save(flight);
+
         this.seatService.add(flight.getFlightId(), flight.getCapacity());
         return new SuccessResult("Flight created with the id " + flight.getFlightId());
 
@@ -61,12 +62,13 @@ public class FlightManager implements FlightService {
 
     private Flight DtoToFlight(FlightAddedDto flightAddedDto) {
         Flight flight = new Flight();
-        flight.setCompany(modelMapper.map(this.companyService.getById(flightAddedDto.getCompanyId()), Company.class));
+
+        flight.setCompany(modelMapper.map(this.companyService.getById(flightAddedDto.getCompanyId()).getData(), Company.class));
         flight.setPrice(flightAddedDto.getPrice());
         flight.setCapacity(flightAddedDto.getCapacity());
         flight.setFlyType(flightAddedDto.getFlyType());
-        flight.setBusinessCapacity(flight.getBusinessCapacity());
-        flight.setBusinessExtra(flight.getBusinessExtra());
+        flight.setBusinessCapacity(flightAddedDto.getBusinessCapacity());
+        flight.setBusinessExtra(flightAddedDto.getBusinessExtra());
         return flight;
     }
 

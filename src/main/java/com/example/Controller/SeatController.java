@@ -6,7 +6,8 @@ import com.example.Core.Result.Result;
 import com.example.DTOs.Seat.Request.SeatAddDto;
 import com.example.DTOs.Seat.Request.SeatUpdateDto;
 import com.example.DTOs.Seat.Response.SeatResponseDto;
-import com.example.Service.Contrats.Service.SeatService;
+import com.example.Service.Contrats.SeatService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class SeatController {
     }
 
     @PostMapping("/add")
-    ResponseEntity<Result> add(SeatAddDto seatAddedDto) {
+    ResponseEntity<Result> add(@Valid @RequestBody SeatAddDto seatAddedDto) {
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body( this.seatService.add(seatAddedDto));
@@ -59,7 +60,7 @@ public class SeatController {
     }
 
     @PostMapping("/updateById")
-    ResponseEntity<Result> updateById(@RequestBody SeatUpdateDto seatUpdateDto) {
+    ResponseEntity<Result> updateById(@Valid @RequestBody SeatUpdateDto seatUpdateDto) {
 
         return ResponseEntity.status(HttpStatus.OK).body( this.seatService.updateById(seatUpdateDto));
     }

@@ -1,7 +1,7 @@
 package com.example.Service.Concrete;
 
-import com.example.Core.Exception.EntityListEmptyException.CompanyListEmptyException;
 import com.example.Core.Exception.EntityAlreadyExist.CompanyAlreadyExistsException;
+import com.example.Core.Exception.EntityListEmptyException.CompanyListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.CompanyNotFoundException;
 import com.example.Core.Result.DataResult;
 import com.example.Core.Result.Result;
@@ -10,9 +10,9 @@ import com.example.Core.Result.SuccessResult;
 import com.example.DTOs.Company.Request.CompanyAddedDto;
 import com.example.DTOs.Company.Request.CompanyUpdateDto;
 import com.example.DTOs.Company.Response.CompanyResponseDto;
-import com.example.Enums.Entity.Company;
+import com.example.Entity.Company;
 import com.example.Repository.CompanyRepository;
-import com.example.Service.Contrats.Service.CompanyService;
+import com.example.Service.Contrats.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -45,6 +45,10 @@ public class CompanyManager implements CompanyService {
     @Override
     public DataResult<CompanyResponseDto> deleteByid(Long id) {
         Optional<Company> company = companyRepository.findById(id);
+        if(company.isEmpty())
+        {
+            throw new CompanyNotFoundException(id);
+        }
         company.ifPresent(companyRepository::delete);
         return new SuccessDataResult<>(
                 "Company with id  " + id + "  deleted successfully.",

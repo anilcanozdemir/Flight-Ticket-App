@@ -1,7 +1,7 @@
 package com.example.DTOs.Seat.Request;
 
 import com.example.Enums.SeatType;
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +10,17 @@ import lombok.Setter;
 public class SeatAddDto {
 
 
-
+    @NotNull(message = "flightId can not be empty")
 
     private Long flightId;
-    @Column
+    @NotNull(message = "seatNumber can not be empty")
+    //TODO seatNumber regex Validation
     private String seatNumber;
-    @Column
+    @NotNull(message = "fullled can not be empty")
     private boolean fullled;
+    @NotNull(message = "seatType can not be empty")
 
+  //  @ValueOfEnum(enumClass = SeatType.class,message = "Invalid term Seat Type")
     private SeatType seatType;
 
 }

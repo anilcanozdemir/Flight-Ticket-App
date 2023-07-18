@@ -1,6 +1,6 @@
 package com.example.Repository;
 
-import com.example.Enums.Entity.Seat;
+import com.example.Entity.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,9 +2,9 @@ package com.example.Service.Concrete;
 
 
 import com.example.Constants.Constants;
+import com.example.Core.Exception.EntityAlreadyExist.SeatAlreadyExistException;
 import com.example.Core.Exception.EntityListEmptyException.SeatListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.SeatNotFoundException;
-import com.example.Core.Exception.EntityAlreadyExist.SeatAlreadyExistException;
 import com.example.Core.Exception.SeatIdListEmptyException;
 import com.example.Core.Result.DataResult;
 import com.example.Core.Result.Result;
@@ -13,13 +13,13 @@ import com.example.Core.Result.SuccessResult;
 import com.example.DTOs.Seat.Request.SeatAddDto;
 import com.example.DTOs.Seat.Request.SeatUpdateDto;
 import com.example.DTOs.Seat.Response.SeatResponseDto;
-import com.example.Enums.Entity.Flight;
-import com.example.Enums.Entity.Seat;
+import com.example.Entity.Flight;
+import com.example.Entity.Seat;
 import com.example.Enums.SeatNumber;
 import com.example.Enums.SeatType;
 import com.example.Repository.SeatRepository;
-import com.example.Service.Contrats.Service.FlightService;
-import com.example.Service.Contrats.Service.SeatService;
+import com.example.Service.Contrats.FlightService;
+import com.example.Service.Contrats.SeatService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class SeatManager implements SeatService {
                 seat.setSeatType(SeatType.ECONOMY);
             }
             seat.setFullled(false);
-            seat.setFlight(modelMapper.map(this.flightService.getById(id), Flight.class));
+            seat.setFlight(modelMapper.map(this.flightService.getById(id).getData(), Flight.class));
 
             this.seatRepository.save(seat);
         }
@@ -178,7 +178,8 @@ public class SeatManager implements SeatService {
     @Override
     public DataResult<List<SeatResponseDto>> getAll() {
         List<Seat> seatList = this.seatRepository.findAll();
-
+        if(seatList.isEmpty())
+            throw new SeatListEmptyException();
 
          return new SuccessDataResult<>(
                  "SeatList is successfully called.",
