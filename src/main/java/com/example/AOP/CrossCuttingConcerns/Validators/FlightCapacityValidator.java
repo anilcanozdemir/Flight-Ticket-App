@@ -1,6 +1,6 @@
-package com.example.AOP.Validators;
+package com.example.AOP.CrossCuttingConcerns.Validators;
 
-import com.example.AOP.Aspects.FlightCapacityMustBeAMultiple;
+import com.example.AOP.Annotations.FlightCapacityMustBeAMultiple;
 import com.example.Constants.BusinessConstants;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

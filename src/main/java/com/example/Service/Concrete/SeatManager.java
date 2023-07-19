@@ -1,6 +1,7 @@
 package com.example.Service.Concrete;
 
 
+import com.example.AOP.Annotations.Logging.LoggerToDbForResult;
 import com.example.Constants.BusinessConstants;
 import com.example.Core.Exception.EntityAlreadyExist.SeatAlreadyExistException;
 import com.example.Core.Exception.EntityListEmptyException.SeatListEmptyException;
@@ -45,6 +46,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public Result add(Long id, int capacity) {
         String[] seatNumbers = SeatNumber.generateSeatNumbers(capacity / BusinessConstants.SEATS_PER_ROW, BusinessConstants.SEATS_PER_ROW);
 
@@ -65,6 +67,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<Double> getPriceById(Long id) {
         Optional<Seat> seat = this.seatRepository.findById(id);
 
@@ -78,6 +81,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<Double> getPriceByIdList(List<Long> idList) {
         Double price = 0.0;
         if (idList.isEmpty()) {
@@ -102,6 +106,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<Double> buyById(Long id) {
         Optional<Seat> seat = this.seatRepository.findById(id);
         if (seat.isEmpty()) {
@@ -119,6 +124,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<Double> buyByIdList(List<Long> idList) {
         Double price = 0.0;
         if (idList.isEmpty()) {
@@ -143,6 +149,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<SeatResponseDto> getByFlightIdAndSeatNumber(String seatNumber, Long flightId) {
         Optional<Seat> seat = seatRepository.findByFlight_FlightIdAndSeatNumber(flightId, seatNumber);
         if (seat.isEmpty())
@@ -151,6 +158,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public Result add(SeatAddDto seatAddDto) {
         Optional<Seat> optional = seatRepository.findByFlight_FlightIdAndSeatNumber(seatAddDto.getFlightId(), seatAddDto.getSeatNumber());
         if (optional.isPresent()) {
@@ -161,6 +169,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<SeatResponseDto> deleteByid(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
         if (seat.isEmpty()) {
@@ -176,6 +185,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<List<SeatResponseDto>> getAll() {
         List<Seat> seatList = this.seatRepository.findAll();
         if (seatList.isEmpty())
@@ -193,6 +203,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<SeatResponseDto> getById(Long id) {
         Optional<Seat> seat = seatRepository.findById(id);
         if (seat.isEmpty()) {
@@ -205,6 +216,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public Result updateById(SeatUpdateDto seatUpdateDto) {
         Optional<Seat> seat = this.seatRepository.findById(seatUpdateDto.getSeatId());
         if (seat.isEmpty()) {
@@ -215,6 +227,7 @@ public class SeatManager implements SeatService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<List<SeatResponseDto>> getAllByFlightId(Long flightId) {
         List<Seat> seatList = seatRepository.findByFlight_FlightId(flightId);
         if (seatList.isEmpty()) {

@@ -1,6 +1,6 @@
-package com.example.AOP.Validators;
+package com.example.AOP.CrossCuttingConcerns.Validators;
 
-import com.example.AOP.Aspects.CompanyNameMustBeUnique;
+import com.example.AOP.Annotations.CompanyNameMustBeUnique;
 import com.example.Repository.CompanyRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

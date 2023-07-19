@@ -1,5 +1,6 @@
 package com.example.Service.Concrete;
 
+import com.example.AOP.Annotations.Logging.LoggerToDbForResult;
 import com.example.Constants.BusinessConstants;
 import com.example.Core.Exception.EntityListEmptyException.FlightListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.FlightNotFoundException;
@@ -46,6 +47,7 @@ public class FlightManager implements FlightService {
     }
 
     @Override
+    @LoggerToDbForResult
     public Result add(FlightAddedDto flightAddedDto) {
 
 
@@ -73,6 +75,7 @@ public class FlightManager implements FlightService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<FlightResponseDto> deleteByid(Long id) {
         Optional<Flight> flight = flightRepository.findById(id);
         if (flight.isPresent()) {
@@ -86,6 +89,7 @@ public class FlightManager implements FlightService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<List<FlightResponseDto>> getAll() {
         List<Flight> flightList = this.flightRepository.findAll();
         if (flightList.isEmpty())
@@ -102,6 +106,7 @@ public class FlightManager implements FlightService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<FlightResponseDto> getById(Long id) {
         Optional<Flight> flight = this.flightRepository.findById(id);
 
@@ -117,6 +122,7 @@ public class FlightManager implements FlightService {
     }
 
     @Override
+    @LoggerToDbForResult
     public Result updateById(FlightUpdateDto flightUpdateDto) {
         Optional<Flight> flightOld = this.flightRepository.findById(flightUpdateDto.getCompanyId());
         if (flightOld.isEmpty()) {

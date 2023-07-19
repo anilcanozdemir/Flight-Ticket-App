@@ -1,8 +1,6 @@
-package com.example.AOP.Aspects;
+package com.example.AOP.Annotations;
 
-
-import com.example.AOP.Validators.FlightCapacityValidator;
-import com.example.Constants.BusinessConstants;
+import com.example.AOP.CrossCuttingConcerns.Validators.CompanyNameValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -14,12 +12,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {FlightCapacityValidator.class})
-public @interface FlightCapacityMustBeAMultiple {
-    String message() default "FlightCapacity must be a value which is a multiple of SEATS_PER_ROW\t" + BusinessConstants.SEATS_PER_ROW;
+@Constraint(validatedBy = {CompanyNameValidator.class})
+public @interface CompanyNameMustBeUnique {
+    String message() default "Company name must be unique.";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

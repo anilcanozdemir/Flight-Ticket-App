@@ -1,6 +1,6 @@
 package com.example.DTOs.Company.Request;
 
-import com.example.AOP.Aspects.CompanyNameMustBeUnique;
+import com.example.AOP.Annotations.CompanyNameMustBeUnique;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

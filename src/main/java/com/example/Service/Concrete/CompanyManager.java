@@ -1,5 +1,6 @@
 package com.example.Service.Concrete;
 
+import com.example.AOP.Annotations.Logging.LoggerToDbForResult;
 import com.example.Core.Exception.EntityAlreadyExist.CompanyAlreadyExistsException;
 import com.example.Core.Exception.EntityListEmptyException.CompanyListEmptyException;
 import com.example.Core.Exception.EntityNotFoundException.CompanyNotFoundException;
@@ -30,6 +31,7 @@ public class CompanyManager implements CompanyService {
     private final ModelMapper modelMapper;
 
     @Override
+    @LoggerToDbForResult
     public Result add(CompanyAddedDto companyAddedDto) {
         Optional<Company> company = companyRepository.findByName(companyAddedDto.getName());
         if (company.isPresent()) {
@@ -43,6 +45,7 @@ public class CompanyManager implements CompanyService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<CompanyResponseDto> deleteByid(Long id) {
         Optional<Company> company = companyRepository.findById(id);
         if (company.isEmpty()) {
@@ -56,6 +59,7 @@ public class CompanyManager implements CompanyService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<List<CompanyResponseDto>> getAll() {
         List<Company> companyList = this.companyRepository.findAll();
         if (companyList.isEmpty()) {
@@ -66,12 +70,15 @@ public class CompanyManager implements CompanyService {
     }
 
     @Override
+    @LoggerToDbForResult
     public DataResult<CompanyResponseDto> getById(Long id) {
+
         Optional<Company> company = this.companyRepository.findById(id);
         return new SuccessDataResult<>("Company with id " + id + "successfully called.", company.map(value -> modelMapper.map(value, CompanyResponseDto.class)).orElseThrow(() -> new CompanyNotFoundException(id)));
     }
 
     @Override
+    @LoggerToDbForResult
     public Result updateById(CompanyUpdateDto companyUpdateDto) {
         Optional<Company> companyOld = this.companyRepository.findById(companyUpdateDto.getCompanyId());
         if (companyOld.isPresent()) {

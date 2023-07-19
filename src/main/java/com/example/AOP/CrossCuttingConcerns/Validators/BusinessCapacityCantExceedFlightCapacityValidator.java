@@ -1,6 +1,6 @@
-package com.example.AOP.Validators;
+package com.example.AOP.CrossCuttingConcerns.Validators;
 
-import com.example.AOP.Aspects.BusinessCapacityCantExceedFlightCapacity;
+import com.example.AOP.Annotations.BusinessCapacityCantExceedFlightCapacity;
 import com.example.DTOs.Flight.Request.FlightAddedDto;
 import com.example.DTOs.Flight.Request.FlightUpdateDto;
 import jakarta.validation.ConstraintValidator;

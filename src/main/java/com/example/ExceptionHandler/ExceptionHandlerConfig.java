@@ -49,7 +49,8 @@ public class ExceptionHandlerConfig {
 
     @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<ErrorResult> handleEntityNotFoundException(EntityNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErrorResult(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResult(exception.getMessage()));
+       // return new ResponseEntity<>(new ErrorResult(exception.getMessage()),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({FlightNonAcceptableCapacityException.class})
@@ -59,7 +60,7 @@ public class ExceptionHandlerConfig {
 
     @ExceptionHandler({SeatIdListEmptyException.class})
     public ResponseEntity<ErrorResult> handleSeatIdListEmptyException(SeatIdListEmptyException exception) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErrorResult(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResult(exception.getMessage()));
     }
 
     @ExceptionHandler({EntityAlreadyExistsException.class})
@@ -69,7 +70,7 @@ public class ExceptionHandlerConfig {
 
     @ExceptionHandler({EntityListEmptyException.class})
     public ResponseEntity<ErrorResult> handleEntityListEmptyException(EntityListEmptyException exception) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErrorResult(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResult(exception.getMessage()));
     }
 
 }

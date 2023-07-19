@@ -1,7 +1,7 @@
 package com.example.DTOs.Flight.Request;
 
-import com.example.AOP.Aspects.BusinessCapacityCantExceedFlightCapacity;
-import com.example.AOP.Aspects.FlightCapacityMustBeAMultiple;
+import com.example.AOP.Annotations.BusinessCapacityCantExceedFlightCapacity;
+import com.example.AOP.Annotations.FlightCapacityMustBeAMultiple;
 import com.example.Enums.FlyType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
