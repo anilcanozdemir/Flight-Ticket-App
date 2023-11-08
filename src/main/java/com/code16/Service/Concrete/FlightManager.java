@@ -124,7 +124,7 @@ public class FlightManager implements FlightService {
     @Override
     @LoggerToDbForResult
     public Result updateById(FlightUpdateDto flightUpdateDto) {
-        Optional<Flight> flightOld = this.flightRepository.findById(flightUpdateDto.getCompanyId());
+        Optional<Flight> flightOld = this.flightRepository.findById(flightUpdateDto.getFlightId());
         if (flightOld.isEmpty()) {
             throw new FlightNotFoundException(flightUpdateDto.getFlightId());
         }
